@@ -7,6 +7,8 @@ XML, YANG, etc.  The goal of this protocol is to provide a protocol that is:
 * Can be secured (encrypted)
 * Has reliable (slow) and unreliable (fast) transports
 
+This is an experiment to see if I can make an interesting protocol using the best of both worlds (maybe).  The idea is that you update items in your database and these items will be sent by the ANFP stack at every interval (unless specified otherwise) and will be sent immediately upon receipt.
+
 ## The Reliable (Slow) Transport
 This is a TCP transport that carries the slow connection information.
 
@@ -33,12 +35,10 @@ There are only a few primitive types:
 
 EXTRA-INFO - This can be used for the following information
 * description - Description of the immediate parent surrounded in quotes.
-* secure - a value of "true" means everything in the immediate parents container is secured.
-* reliable - a value of "true" means everything in the immediate parents container is sent on the reliable channel.
-* global-sync - a value of "true" means everything in the immediate parents container is synced globally
-* global-sync-time - a number timeout value to sync everything in the global sync
-* group - packet send group
-* priority - packet priority
+* reliable - a value of "true" means everything in the immediate container and its children will be sent on the reliable channel
+* global-update-interval - the global update interval where all data will be sent if available 
+* update-interval - the update interval of everything in the immediate parent container
+* must-update-time - the maximum time this entry will be sent before an update occurs
 * tag - additional tag information
 
 ```
@@ -47,7 +47,7 @@ module-name MODULE-NAME {
   module-mode MODULE-MODE {
     MODULE-MODE-VALUE
   }
-  
+  security SECURITY-MODE;
   data-unit UNIT-NAME {
     EXTRA-INFO;
     number[size] NUMBER-NAME {
