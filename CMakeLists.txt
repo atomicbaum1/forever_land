@@ -10,7 +10,7 @@ find_package(Boost REQUIRED)
 include_directories(${SDL2_INCLUDE_DIRS} {SDL2NET_INCLUDE_DIRS} {Boost_INCLUDE_DIRS})
 
 add_executable(forever_land
-        Main.cpp net/Server.cpp net/Server.hpp net/Client.cpp net/Client.hpp health/System.cpp health/System.hpp)
+        Main.cpp health/System.cpp health/System.hpp net/Endpoint.cpp net/Endpoint.hpp net/Connection.cpp net/Connection.hpp net/UdpConnection.cpp net/UdpConnection.hpp)
 target_link_libraries(forever_land ${Boost_LIBRARIES} ${SDL2_LIBRARIES} -lSDL2_net)
 
 

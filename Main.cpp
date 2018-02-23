@@ -2,6 +2,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_net.h>
 #include "health/System.hpp"
+#include "net/Connection.hpp"
 
 int main() {
     SDL_Init(SDL_INIT_EVERYTHING);
