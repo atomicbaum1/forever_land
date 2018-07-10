@@ -13,10 +13,9 @@
 /// @brief Arctic Fox Studio
 namespace AFS {
     /// @brief Basic connection
-    template <typename socket>
     class Connection {
     public:
-        virtual socket open() = 0;
+        virtual void open() = 0;
         virtual void close() = 0;
         virtual void rx(std::string &data) = 0;
         virtual void tx(const std::string &data) = 0;
