@@ -9,7 +9,8 @@
 #ifdef DEBUGGING_ON
 
 #include <iostream>
-#define LOG(string) { std::cout << __FILE__ << "::" __FUNCTION__ << " : " << __LINE__ << " | "  << (string); }
+#define LOG(string) { std::cout << __FILE__ << "::" << __FUNCTION__ << "() : " << __LINE__ << " | "  << (string) \
+                      << std::endl; }
 
 #else
 

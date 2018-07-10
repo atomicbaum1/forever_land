@@ -30,7 +30,7 @@ void AFS::UdpConnection::close() {
 
 /// @brief Receive data on the wire
 /// @param [out] data RX data
-void AFS::UdpConnection::rx(std::string &data) {
+void AFS::UdpConnection::rx(std::string &data, IPaddress *ipAddr) {
     // If there is no error (Status != -1) then copy the data to the string
     if (SDLNet_UDP_Recv(this->_socket, this->_in) != -1) {
         // Loop through the packet data to convert it from Uint8 to char to std::string
@@ -44,9 +44,13 @@ void AFS::UdpConnection::rx(std::string &data) {
 
 /// @brief Transmits data on the wire
 /// @param [in] data TX data
-void AFS::UdpConnection::tx(const std::string &data) {
+void AFS::UdpConnection::tx(const std::string &data, IPaddress *ipAddr) {
     // Convert the string to the packet data type
-    memcpy(this->_out->data, data.c_str(), data.length());
+
+    SDLNet_ResizePacket(this->_out, 1024);
+    this->_out->data = (Uint8*)new char[data.length()];
+    this->_out->len = (Uint16)data.size();
+    this->_out->address = *ipAddr;
     if (!SDLNet_UDP_Send(this->_socket, -1, this->_out)) {
         std::cout << "Error sending packet" << std::endl;
     }
@@ -55,7 +59,7 @@ void AFS::UdpConnection::tx(const std::string &data) {
 /// @brief Detects if the data is ready to read on the wire
 /// @return true if data is ready, false otherwise
 bool AFS::UdpConnection::dataReady() {
-    return false;
+    return (bool)SDLNet_SocketReady(this->_socket);
 }
 
 /// @brief Creates a UDP connection based off an IP and port
@@ -66,6 +70,10 @@ AFS::UdpConnection::UdpConnection(std::string destIpAddress, std::uint16_t destP
     this->_destPort = destPort;
 
     if (!(this->_in = SDLNet_AllocPacket(sizeof(std::uint16_t)))) {
+        throw std::runtime_error(std::string("Failed: ") + SDLNet_GetError());
+    }
+
+    if (!(this->_out = SDLNet_AllocPacket(sizeof(std::uint16_t)))) {
         throw std::runtime_error(std::string("Failed: ") + SDLNet_GetError());
     }
 }

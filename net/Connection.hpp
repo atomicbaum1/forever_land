@@ -9,6 +9,7 @@
 #pragma once
 #include <cstdint>
 #include <string>
+#include <SDL_net.h>
 
 /// @brief Arctic Fox Studio
 namespace AFS {
@@ -17,8 +18,8 @@ namespace AFS {
     public:
         virtual void open() = 0;
         virtual void close() = 0;
-        virtual void rx(std::string &data) = 0;
-        virtual void tx(const std::string &data) = 0;
+        virtual void rx(std::string &data, IPaddress *ipAddr) = 0;
+        virtual void tx(const std::string &data, IPaddress *ipAddr) = 0;
         virtual bool dataReady() = 0;
     };
 

@@ -26,8 +26,8 @@ namespace AFS {
         UdpConnection(std::string destIpAddress, std::uint16_t destPort);
         void open() final;
         void close() final;
-        void rx(std::string &data) final;
-        void tx(const std::string &data) final;
+        void rx(std::string &data, IPaddress *ipAddr) final;
+        void tx(const std::string &data, IPaddress *ipAddr) final;
         bool dataReady() final;
     };
 

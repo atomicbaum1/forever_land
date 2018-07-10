@@ -6,6 +6,9 @@
 
 #include <string>
 #include <fstream>
+#include <atomic>
+#include <thread>
+#include <SDL2/SDL_thread.h>
 #include "../system/Logging.h"
 
 namespace AFS {
@@ -16,6 +19,10 @@ namespace AFS {
         std::string logFile{""};
     };
 
+    struct ContextTick {
+        u_int64_t delta;
+    };
+
     int _contextCallback(void * data);
 
     /// @breif A thread context
@@ -24,27 +31,25 @@ namespace AFS {
         /// @brief User configurable context options
         ContextOptions _options;
         std::ofstream _logfile;
+        SDL_Thread * _thread{nullptr};
+        void _run();
+        std::atomic<bool> _paused{false};
+        std::atomic<bool> _stop{false};
 
     public:
-        /// @brief Context constructor
-        /// @param [in] Context options for specific context settings
         explicit Context(ContextOptions &options);
         /// @brief Default context constructor with default context options
         Context(): _options{ContextOptions()} {}
-
-        /// @brief Closes the logfile
         ~Context();
-
-        /// @brief Pauses the context
         void pause();
-
-        /// @breif Stops the context gracefully
+        void unpause();
         void stop();
-
+        void start(const char * name);
+        void wait();
         /// @brief Starts the context
-        void run();
-
-        /// @brief Logs
+        virtual void run(ContextTick & contextTick) = 0;
         void log(std::string string);
+
+        friend int _contextCallback(void * data);
     };
 }
