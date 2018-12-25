@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameWorld>
+   <WorldLevelType>DemoWorld</WorldLevelType>
+   <Background>Background.png</Background>
+   
+   <WorldObject id="0">
+      <StartingLocation>
+         <X></X>
+         <Y></Y>
+      </StartingLocation>
+      
+   </WorldObject>
+   
+   <Planet id="1">
+      <Image></Image>
+      <Gravity></Gravity>
+      <StartingLocation>
+         <X></X>
+         <Y></Y>
+      </StartingLocation>
+   </Planet>
+   
+</GameWorld>

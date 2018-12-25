@@ -8,7 +8,7 @@
 #include <stdexcept>
 #include <iostream>
 
-namespace AFS {
+namespace BaumNetwork {
 
      /// @brief Pauses the context
     void Context::pause() {

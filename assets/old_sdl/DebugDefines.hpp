@@ -1,0 +1,1 @@
+#define OUTPUT_TO_CONSOLE  // Output to the windows console

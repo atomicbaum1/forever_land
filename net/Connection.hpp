@@ -3,7 +3,7 @@
 /// @file Connection.hpp
 /// @brief TODO: Add file description
 /// @author Matthew Baum
-/// @copyright (c) 2018 Arctic Fox Studio, LTD. All rights reserved.
+/// @copyright (c) 2018 Baum Network. All rights reserved.
 ///
 
 #pragma once
@@ -11,8 +11,8 @@
 #include <string>
 #include <SDL_net.h>
 
-/// @brief Arctic Fox Studio
-namespace AFS {
+/// @brief Baum Network
+namespace BaumNetwork {
     /// @brief Basic connection
     class Connection {
     public:
@@ -23,5 +23,5 @@ namespace AFS {
         virtual bool dataReady() = 0;
     };
 
-}; // Arctic Fox Studio Namespace
+}; // Baum Network Namespace
 

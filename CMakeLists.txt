@@ -2,15 +2,27 @@ cmake_minimum_required(VERSION 3.9)
 project(forever_land)
 
 set(CMAKE_CXX_STANDARD 17)
-set(ORGANIZATION_NAME "Arctic Fox Studio, LTD")
+set(ORGANIZATION_NAME "Baum Network")
 
 find_package(SDL2 REQUIRED)
 find_package(Boost REQUIRED)
 
-include_directories(${SDL2_INCLUDE_DIRS} {SDL2NET_INCLUDE_DIRS} {Boost_INCLUDE_DIRS})
+set(GFX ./gfx)
+set(NET ./net)
+set(SYSTEM ./system)
+set(BASIC ./basic)
+set(CONTEXT ./context)
+include_directories(${GFX})
+include_directories(${NET})
+include_directories(${SYSTEM})
+include_directories(${BASIC})
+include_directories(${CONTEXT})
+include_directories(${SDL2_INCLUDE_DIRS} {SDL2NET_INCLUDE_DIRS} {SDL2IMG_INCLUDE_DIRS} {Boost_INCLUDE_DIRS})
 
 add_executable(forever_land
-        Main.cpp system/System.cpp system/System.hpp net/Connection.cpp net/Connection.hpp net/UdpConnection.cpp net/UdpConnection.hpp context/Context.cpp context/Context.h system/Logging.h system/Constants.h)
-target_link_libraries(forever_land ${Boost_LIBRARIES} ${SDL2_LIBRARIES} -lSDL2_net)
-
+        Main.cpp system/System.cpp system/System.hpp net/Connection.cpp net/Connection.hpp net/UdpConnection.cpp
+        net/UdpConnection.hpp context/Context.cpp context/Context.h system/Logging.hpp gfx/Sprite.cpp gfx/Sprite.hpp
+        system/Exception.cpp system/Exception.hpp gfx/AnimatedSprite.cpp gfx/AnimatedSprite.hpp gfx/Textures.cpp
+        gfx/Textures.hpp gfx/Display.cpp gfx/Display.hpp basic/Singleton.hpp system/Settings.cpp system/Settings.hpp assets/old_sdl/Dependency.hpp)
+target_link_libraries(forever_land ${Boost_LIBRARIES} ${SDL2_LIBRARIES} -lSDL2_net -lSDL2_image)
 

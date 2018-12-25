@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--Version is year.month.day.build-->
+<Settings version="2015.1.28.0">
+   <GameWorldManifest>GameWorldManifest.xml</GameWorldManifest>
+   <StartingWorld>DemoWorld.xml</StartingWorld>
+   <Display width="1280" height="720" windowed="true"/>
+   <Audio></Audio>
+   <Input></Input>
+</Settings>

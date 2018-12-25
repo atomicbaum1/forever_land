@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GameWorldManifest>
+   <GameWorld>
+      <Name>Demo Level</Name>
+      <XML>DemoLevel.xml</XML>
+   </GameWorld>
+</GameWorldManifest>

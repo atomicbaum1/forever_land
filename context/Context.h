@@ -9,9 +9,9 @@
 #include <atomic>
 #include <thread>
 #include <SDL2/SDL_thread.h>
-#include "../system/Logging.h"
+#include "Logging.hpp"
 
-namespace AFS {
+namespace BaumNetwork {
 
     /// @brief Options for a context
     struct ContextOptions {

@@ -3,7 +3,7 @@
 /// @file UdpConnection.cpp
 /// @brief TODO: Add file description
 /// @author Matthew Baum
-/// @copyright (c) 2018 Arctic Fox Studio, LTD. All rights reserved.
+/// @copyright (c) 2018 Baum Network. All rights reserved.
 ///
 
 #include <cstdint>
@@ -16,21 +16,21 @@
 
 /// @breif Opens a UDP Connection
 /// @throw std::runtime_error with message on failure
-void AFS::UdpConnection::open() {
+void BaumNetwork::UdpConnection::open() {
     if (!(this->_socket = SDLNet_UDP_Open(this->_destPort))) { // If we couldn't open the socket
         throw std::runtime_error(std::string("Failed: ") + SDLNet_GetError());
     }
 }
 
 /// @brief Closes the connection
-void AFS::UdpConnection::close() {
+void BaumNetwork::UdpConnection::close() {
     SDLNet_UDP_Close(this->_socket);
     this->_socket = nullptr;
 }
 
 /// @brief Receive data on the wire
 /// @param [out] data RX data
-void AFS::UdpConnection::rx(std::string &data, IPaddress *ipAddr) {
+void BaumNetwork::UdpConnection::rx(std::string &data, IPaddress *ipAddr) {
     // If there is no error (Status != -1) then copy the data to the string
     if (SDLNet_UDP_Recv(this->_socket, this->_in) != -1) {
         // Loop through the packet data to convert it from Uint8 to char to std::string
@@ -44,7 +44,7 @@ void AFS::UdpConnection::rx(std::string &data, IPaddress *ipAddr) {
 
 /// @brief Transmits data on the wire
 /// @param [in] data TX data
-void AFS::UdpConnection::tx(const std::string &data, IPaddress *ipAddr) {
+void BaumNetwork::UdpConnection::tx(const std::string &data, IPaddress *ipAddr) {
     // Convert the string to the packet data type
 
     SDLNet_ResizePacket(this->_out, 1024);
@@ -58,14 +58,14 @@ void AFS::UdpConnection::tx(const std::string &data, IPaddress *ipAddr) {
 
 /// @brief Detects if the data is ready to read on the wire
 /// @return true if data is ready, false otherwise
-bool AFS::UdpConnection::dataReady() {
+bool BaumNetwork::UdpConnection::dataReady() {
     return (bool)SDLNet_SocketReady(this->_socket);
 }
 
 /// @brief Creates a UDP connection based off an IP and port
 /// @param [in] destIpAddress Destination IP address
 /// @param [in] destPort Destination port number
-AFS::UdpConnection::UdpConnection(std::string destIpAddress, std::uint16_t destPort) {
+BaumNetwork::UdpConnection::UdpConnection(std::string destIpAddress, std::uint16_t destPort) {
     this->_destIpAddress = std::move(destIpAddress);
     this->_destPort = destPort;
 

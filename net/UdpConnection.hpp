@@ -3,17 +3,17 @@
 /// @file UdpConnection.hpp
 /// @brief TODO: Add file description
 /// @author Matthew Baum
-/// @copyright (c) 2018 Arctic Fox Studio, LTD. All rights reserved.
+/// @copyright (c) 2018 Baum Network. All rights reserved.
 ///
 
 #pragma once
 #include <string>
 
-/// @brief Arctic Fox Studio
+/// @brief Baum Network
 #include "Connection.hpp"
 #include <SDL_net.h>
 
-namespace AFS {
+namespace BaumNetwork {
 
     /// @brief Basic and raw UDP Connection class to open/close connections.  It also can get and send data
     class UdpConnection : public Connection {
@@ -31,5 +31,5 @@ namespace AFS {
         bool dataReady() final;
     };
 
-}; // Arctic Fox Studio Namespace
+}; // Baum Network Namespace
 
