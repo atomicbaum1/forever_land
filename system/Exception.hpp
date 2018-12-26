@@ -20,10 +20,10 @@ namespace BaumNetwork {
         FATAL
     };
 
-    /// @brief TODO: Add class description
+    /// @brief Basic exception class to hold a message and severity
     struct Exception {
-        explicit Exception(std::string description);
-        explicit Exception(std::string description, ExceptionSeverity severity);
+        explicit Exception(const std::string & description);
+        explicit Exception(const std::string & description, ExceptionSeverity severity);
         std::string description;  /// Description of the error
         ExceptionSeverity severity;  /// Severity of the error
     };

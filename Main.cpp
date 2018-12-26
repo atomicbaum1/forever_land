@@ -1,128 +1,45 @@
 #include <iostream>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_net.h>
-#include "system/System.hpp"
-#include "net/UdpConnection.hpp"
-#include <thread>
-#include "context/Context.h"
 #include <SDL_image.h>
+#include <thread>
+#include <string>
+#include "System.hpp"
 #include "Textures.hpp"
+#include "Logging.hpp"
+#include "DisplaySettings.hpp"
+#include "Display.hpp"
 
-#if 0
-enum class ClientConnectionState {
-    Hello,
-    Connected
-};
-
-class Client : public BaumNetwork::Context {
-private:
-    BaumNetwork::UdpConnection * _connection{nullptr};
-    ClientConnectionState _state{ClientConnectionState::Hello};
-
-public:
-
-    Client() {
-        _connection = new BaumNetwork::UdpConnection("localhost", 0);
-        _connection->open();
-    }
-    ~Client() {
-        _connection->close();
-    }
-    void run(BaumNetwork::ContextTick & contextTick) override {
-
-        if (_state == ClientConnectionState::Hello) {
-            LOG("Sending hello")
-            IPaddress server;
-            SDLNet_ResolveHost(&server, "localhost", 6666);
-            _connection->tx("HELLO", &server);
-        }
-
-        if (_connection->dataReady()) {
-            LOG("Got data")
-            _state = ClientConnectionState::Connected;
-            std::string data;
-            IPaddress server;
-            _connection->rx(data, &server);
-            std::cout << "Got data: " << data << std::endl;
-        }
-
-        if (_state == ClientConnectionState::Connected) {
-            LOG("Stopping")
-            stop();
-        }
-    }
-};
-
-class Server : public BaumNetwork::Context {
-private:
-    BaumNetwork::UdpConnection * _connection{nullptr};
-    ClientConnectionState _state{ClientConnectionState::Hello};
-
-public:
-    Server() {
-        _connection = new BaumNetwork::UdpConnection("localhost", 6666);
-        _connection->open();
-    }
-    ~Server() {
-        _connection->close();
-    }
-    void run(BaumNetwork::ContextTick & contextTick) override {
-
-        if (_connection->dataReady()) {
-            LOG("Got data")
-            IPaddress client;
-            std::string data;
-            _connection->rx(data, &client);
-            _connection->tx("MEOW", &client);
-        }
-
-        if (_state == ClientConnectionState::Connected) {
-            LOG("Stopping")
-            stop();
-        }
-    }
-};
-#endif
-
+/// @brief entry point
+/// @return 0 upon success, other status on failure
 int main() {
-    SDL_Init(SDL_INIT_EVERYTHING);
-    SDLNet_Init();
-    int imgFlags = IMG_INIT_PNG;
-    if( !( IMG_Init( imgFlags ) & imgFlags ) ) {
-        LOG("Could not init SDL_Image");
+
+    // Initialize the SDL and logging subsystems
+    auto system = BaumNetwork::System();
+    system.init();
+
+    globalLogger->log(std::string("Version info:\n" + BaumNetwork::System::getSdlVersions()),
+            BaumNetwork::LogSeverity::DEBUG);
+
+    // Load the settings
+    BaumNetwork::DisplaySettings ds;
+    if (!ds.loadSettings("/home/mbaum/forever_land/assets/DisplaySettings.json")) {
+        globalLogger->log(std::string("Could not load display settings"),
+                          BaumNetwork::LogSeverity::ERROR);
         return -1;
     }
 
-    // Print the System info
-    std::cout << "Version Info:" << std::endl;
-    std::cout << BaumNetwork::System::getSdlVersions() << std::endl;
+    // Create the display
+    auto display = new BaumNetwork::Display(std::string("Demo"), ds.getSettings());
+    display->initDisplay();
+    auto renderer = display->getRenderer();
 
-    SDL_Window * sdlWindow{nullptr};
-    SDL_Renderer * renderer{nullptr};
+    globalLogger->log(std::string("Done with subsystem setup"), BaumNetwork::LogSeverity::DEBUG);
 
-    //Create window
-    if (!(sdlWindow = SDL_CreateWindow("Demo", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 640, 480,
-            SDL_WINDOW_SHOWN))) {
-        LOG("Error creating window");
-        return -1;
-    }
-    if (!(renderer = SDL_CreateRenderer(sdlWindow, -1, SDL_RENDERER_ACCELERATED))) {
-        LOG("Error creating renderer");
-    }
-    SDL_SetRenderDrawColor(renderer, 0xFF, 0x44, 0xFF, 0xFF );
-
-
-#if 0
-    auto client = new Client();
-    auto server = new Server();
-
-    client->start("client");
-    server->start("server");
-
-    client->wait();
-    server->wait();
-#endif
-
+    /////////////////////////
+    /// Debug code starts ///
+    /////////////////////////
+    // Load test image
     SDL_Texture * texture = BaumNetwork::Textures::loadImageFromFile(renderer,
             "/home/mbaum/forever_land/assets/image.png");
 
@@ -146,8 +63,12 @@ int main() {
         SDL_RenderPresent(renderer);
     }
 
-    SDLNet_Quit();
-    SDL_Quit();
+    /////////////////////////
+    /// Debug code ends ///
+    /////////////////////////
+
+    delete display;
+    system.shutdown();
 
     return 0;
 }

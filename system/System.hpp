@@ -12,14 +12,14 @@
 /// @brief Baum Network
 namespace BaumNetwork {
 
-    class System : final{
+    class System {
     private:
         static std::string _sdlVersionString;
 
     public:
         System() = default;
         ~System() = default;
-        static const std::string &getSdlVersions();
+        static const std::string & getSdlVersions();
         void init();
         void shutdown();
     };

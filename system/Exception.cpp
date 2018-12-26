@@ -7,13 +7,13 @@
 ///
 
 #include "Exception.hpp"
-/// @brief Baum Network
 
+/// @brief Baum Network
 namespace BaumNetwork {
-    Exception::Exception(std::string description) : Exception(description, ExceptionSeverity::WARNING) {
+    Exception::Exception(const std::string & description) : Exception(description, ExceptionSeverity::WARNING) {
     }
 
-    Exception::Exception(std::string description, ExceptionSeverity severity) :
-            description{std::move(description)}, severity{severity} {
+    Exception::Exception(const std::string & description, ExceptionSeverity severity) :
+            description{description}, severity{severity} {
     }
 }

@@ -1,6 +1,6 @@
 ///
-/// @file Sprite.cpp
-/// @brief TODO: Add file description
+/// @file Display.hpp
+/// @brief SDL Display operations
 /// @author Matthew Baum
 /// @copyright (c) 2018 Baum Network. All rights reserved.
 ///
@@ -9,25 +9,25 @@
 
 #include <SDL2/SDL.h>
 #include <string>
-#include "Settings.hpp"
+#include "DisplaySettings.hpp"
 #include "Singleton.hpp"
 
 /// @brief Baum Network
 namespace BaumNetwork {
-    const char * DEFAULT_DISPLAY_TITLE = "TEST TITLE"
 
+    /// @brief Window/Display operations
     class Display {
     protected:
-        DisplaySettings _displaySettings;
-        SDL_Renderer *_pRenderer;
-        SDL_Window *_pWindow;
-        SDL_DisplayMode *_pDisplayMode;
-        std::string _title;
+        DisplaySettingsData _displaySettings;  /// Display settings data
+        SDL_Renderer *_pRenderer;  /// SDL Renderer
+        SDL_Window *_pWindow;  /// SDL Window data
+        SDL_DisplayMode *_pDisplayMode;  /// SDL Display mode
+        std::string _title{"-/-"};
 
     public:
-        Display(const char *title = DEFAULT_DISPLAY_TITLE);
-        virtual ~Display();
-        virtual void initDisplay(DisplaySettings *pDisplaySettings);
+        explicit Display(const std::string & title, const DisplaySettingsData & displaySettingsData);
+        ~Display();
+        void initDisplay();
         SDL_Renderer *getRenderer() const;
         SDL_Window *getWindow() const;
         void render() const;

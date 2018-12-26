@@ -17,13 +17,16 @@
 /// @brief Baum Network
 namespace BaumNetwork {
 
+    /// @brief SDL Version string
+    std::string System::_sdlVersionString;
+
     /// @brief Get the SDL version strings.
     /// @brief Currently includes the version strings for: SDL2, SDL2_net
     /// @return String containing the SDL library versions
-    const std::string &System::getSdlVersions() {
+    const std::string & System::getSdlVersions() {
 
-        if (!_sdlVersionString.empty()) {
-            return _sdlVersionString;
+        if (!System::_sdlVersionString.empty()) {
+            return System::_sdlVersionString;
         }
 
         boost::format formatter("SDL2:\n"
@@ -63,24 +66,50 @@ namespace BaumNetwork {
         return _sdlVersionString;
     }
 
-    /// @brief Initialize the SDL subsystem
+    /// @brief Initialize the SDL subsystem and the game subsystem for globals
     /// @throws Exception when something cannot be initialized
     void System::init() {
-        // TODO: Check the returns and get the correct return error
-        SDL_Init(SDL_INIT_EVERYTHING);
-        SDLNet_Init();
-        int imgFlags = IMG_INIT_PNG;
-        if(!(IMG_Init(imgFlags) & imgFlags)) {
-            LOG("Could not init SDL_Image");
-            throw Exception("Could not init SDL_Image", ExceptionSeverity::FATAL);
+        globalLogger->openLog();
+        globalLogger->log("System init", LogSeverity::DEBUG);
+
+        std::string errorMessage;
+
+        // Init SDL
+        globalLogger->log("Initializing SDL", LogSeverity::DEBUG);
+        if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
+            errorMessage = std::string("Could not init SDL: ") + SDL_GetError();
+            globalLogger->log(errorMessage, LogSeverity::ERROR);
+            throw Exception(errorMessage, ExceptionSeverity::FATAL);
         }
+
+        // Init SDL net
+        globalLogger->log("Initializing SDL net", LogSeverity::DEBUG);
+        if (SDLNet_Init() == -1) {
+            errorMessage = std::string("Could not init SDL Net: ") + SDLNet_GetError();
+            globalLogger->log(errorMessage, LogSeverity::ERROR);
+            throw Exception(errorMessage, ExceptionSeverity::FATAL);
+        }
+
+        // Init SDL image
+        globalLogger->log("Initializing SDL image", LogSeverity::DEBUG);
+        int imgFlags = IMG_INIT_PNG;
+        if (!(IMG_Init(imgFlags) & imgFlags)) {
+            errorMessage = std::string("Could not init SDL Image: ") + SDLNet_GetError();
+            globalLogger->log(errorMessage, LogSeverity::ERROR);
+            throw Exception(errorMessage, ExceptionSeverity::FATAL);
+        }
+
+        globalLogger->log("Init finished.", LogSeverity::DEBUG);
     }
 
     /// @brief Shutdown the SDL subsystems
     void System::shutdown() {
+        globalLogger->log("Shutting down", LogSeverity::DEBUG);
         IMG_Quit();
         SDLNet_Quit();
         SDL_Quit();
+        globalLogger->log("Shut down finished.  Goodbye.", LogSeverity::DEBUG);
+        globalLogger->closeLog();
     }
 
 }
